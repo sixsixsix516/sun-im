@@ -1,0 +1,52 @@
+syntax = "proto3";
+
+option java_package = "com.sixsixsix516.im.common.model";
+option java_outer_classname = "ImMessage";
+
+// 传输的消息
+message Message {
+  MessageType messageType = 1;
+  ChatMessage chatMessage = 2;
+  LoginMessage loginMessage = 3;
+  LoginResultMessage loginResultMessage = 4;
+}
+
+// 消息类型
+enum MessageType {
+  // 聊天消息
+  CHAT = 0;
+  // 登录消息
+  LOGIN = 1;
+  // 登录结果
+  LOGIN_RESULT = 2;
+  // 心跳消息
+  HEART_BEAT = 3;
+}
+
+
+// 聊天消息
+message ChatMessage {
+  // 发送的内容
+  string content = 1;
+  // 发送的目标用户
+  string toUsername = 2;
+  // 发送的用户
+  string fromUsername = 3;
+}
+
+
+// 登录消息
+message LoginMessage {
+  // 登录的用户
+  string username = 1;
+}
+
+// 登录结果消息
+message LoginResultMessage {
+  // 登录结果 1成功 2失败
+  bool status = 1;
+  // 提示消息
+  string message = 2;
+}
+
+
