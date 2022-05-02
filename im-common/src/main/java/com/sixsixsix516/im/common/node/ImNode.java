@@ -2,6 +2,8 @@ package com.sixsixsix516.im.common.node;
 
 import lombok.Data;
 
+import java.util.concurrent.atomic.AtomicInteger;
+
 /**
  * 代表集群中的一个节点
  *
@@ -29,6 +31,6 @@ public class ImNode {
     /**
      * 节点连接数
      */
-    private Integer connections;
+    private AtomicInteger connections = new AtomicInteger(0);
 
 }

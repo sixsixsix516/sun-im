@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 服务负载均衡
@@ -27,18 +28,17 @@ public class ServerLoadBalance {
         try {
             List<String> nodePathList = curatorFramework.getChildren().forPath(NodeConstant.PATH);
 
-            List<ImNode> list = new ArrayList<>(nodePathList.size());
-            for (String nodePath : nodePathList) {
-                byte[] content = curatorFramework.getData().forPath(NodeConstant.PATH + "/" + nodePath);
-                ImNode imNode = new Gson().fromJson(new String(content), ImNode.class);
-                list.add(imNode);
-            }
-
-            list.sort(Comparator.comparingInt(ImNode::getConnections));
-
+            List<ImNode> list = nodePathList.stream().map(nodePath -> {
+                byte[] content = new byte[0];
+                try {
+                    content = curatorFramework.getData().forPath(NodeConstant.PATH + "/" + nodePath);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                return new Gson().fromJson(new String(content), ImNode.class);
+            }).sorted(Comparator.comparingInt(imNode -> imNode.getConnections().get())).collect(Collectors.toList());
 
             return list.get(0);
-
         } catch (Exception e) {
             e.printStackTrace();
             return null;

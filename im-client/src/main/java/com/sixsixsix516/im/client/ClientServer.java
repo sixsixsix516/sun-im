@@ -24,7 +24,7 @@ import lombok.extern.slf4j.Slf4j;
 public class ClientServer {
 
     public static Channel start() throws InterruptedException {
-        ImNode imNode = HttpUtil.get("http://127.0.0.1:9955/getNode", ImNode.class);
+        ImNode imNode = HttpUtil.get("http://127.0.0.1:9922/getNode", ImNode.class);
         String host = imNode.getHost();
         Integer port = imNode.getPort();
 

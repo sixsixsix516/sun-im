@@ -26,9 +26,7 @@ public class ImClientApplication implements CommandLineRunner {
     public void run(String... args) throws InterruptedException {
         Channel channel = ClientServer.start();
         ChannelContext.set(channel);
-
         Scanner scanner = new Scanner(System.in);
-
 
 
         while (true) {

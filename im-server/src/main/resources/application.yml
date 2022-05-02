@@ -3,11 +3,11 @@ zookeeper:
   max-retries: 3
   base-sleep-time-ms: 1000
 server:
-  port: 9955
+  port: 9923
 
 im:
   host: 127.0.0.1
-  port: 9966
+  port: 9916
 
 
 spring:

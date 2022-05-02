@@ -17,11 +17,25 @@ public class UserCacheService {
     private final ImNode imNode;
 
     public void addCurrentLoginUser(String username) {
-        redisTemplate.opsForValue().set(RedisKeyConstant.IM_LOGIN + username, String.valueOf(imNode.getId()));
+        redisTemplate.opsForHash().put(RedisKeyConstant.IM_LOGIN, username, String.valueOf(imNode.getId()));
+    }
+
+    /**
+     * 获取指定用户所在的节点id
+     */
+    public String getImNodeId(String username) {
+        Object nodeId = redisTemplate.opsForHash().get(RedisKeyConstant.IM_LOGIN, username);
+        if (nodeId == null) {
+            // 没在线
+            return null;
+        }
+        return (String) nodeId;
     }
 
     public void deleteCurrentLoginUser(String username) {
-        redisTemplate.delete(RedisKeyConstant.IM_LOGIN + username);
+        imNode.getConnections().decrementAndGet();
+        redisTemplate.opsForHash().delete(RedisKeyConstant.IM_LOGIN, username);
+        // TODO ZK回写
     }
 
 }

@@ -1,6 +1,7 @@
 package com.sixsixsix516.im.server.node;
 
 import com.google.gson.Gson;
+import com.sixsixsix516.im.common.model.ImMessage;
 import com.sixsixsix516.im.common.node.ImNode;
 import com.sixsixsix516.im.server.zookeeper.NodeConstant;
 import com.sixsixsix516.im.server.zookeeper.NodeIdGenerator;
@@ -34,6 +35,19 @@ public class ClusterNodeWorker {
     private final ConcurrentHashMap<Long, Channel> clusterOuterNodeChannelMap = new ConcurrentHashMap<>();
 
 
+    /**
+     * 集群中其他节点转发消息
+     */
+    public void redirectMessage(Long imNodeId, ImMessage.Message message) {
+        Channel channel = clusterOuterNodeChannelMap.get(imNodeId);
+        if (channel != null) {
+            channel.writeAndFlush(message);
+        }
+    }
+
+    /**
+     * 向集群中添加一个节点
+     */
     public void addClusterNode(ImNode imNode) {
         if (imNode.getId().equals(localImNode.getId())) {
             return;
@@ -43,16 +57,13 @@ public class ClusterNodeWorker {
         channelFuture.addListener(future -> {
             if (future.isSuccess()) {
                 clusterOuterNodeChannelMap.put(imNode.getId(), channelFuture.channel());
-                log.info("添加集群节点：{}", imNode);
-                // 将节点连接数+1 TODO 一致性问题？ 现在是基于回调+1？ 可不可以直接在内存存储连接数
-                imNode.setConnections(imNode.getConnections() + 1);
-
-                byte[] content = new Gson().toJson(imNode).getBytes(StandardCharsets.UTF_8);
-                curatorFramework.setData().forPath(NodeConstant.PATH + "/" + imNode.getId(), content);
             }
         });
     }
 
+    /**
+     * 集群中删除一个节点
+     */
     public void removeClusterNode(ImNode imNode) {
         log.info("删除集群节点：{}", imNode);
         Long id = imNode.getId();
@@ -64,11 +75,8 @@ public class ClusterNodeWorker {
         }
     }
 
-
     public Long createLocalNode() {
         // 创建当前节点表示的对象
-        localImNode.setConnections(0);
-
         Long nodeId = nodeIdGenerator.get();
         localImNode.setId(nodeId);
         byte[] content = new Gson().toJson(localImNode).getBytes(StandardCharsets.UTF_8);

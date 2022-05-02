@@ -6,5 +6,5 @@ package com.sixsixsix516.im.server.cache;
  */
 public interface RedisKeyConstant {
 
-    String IM_LOGIN = "ImLoginUser:";
+    String IM_LOGIN = "ImLoginUser";
 }
