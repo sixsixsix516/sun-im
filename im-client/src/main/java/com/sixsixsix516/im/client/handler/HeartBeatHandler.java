@@ -23,7 +23,6 @@ public class HeartBeatHandler extends ChannelInboundHandlerAdapter {
         ctx.executor().schedule(() -> {
             if (ctx.channel().isActive()) {
                 // 发送心跳消息
-                log.info("发送心跳");
                 ImMessage.Message message = ImMessage.Message.newBuilder().setMessageType(ImMessage.MessageType.HEART_BEAT).build();
                 ctx.channel().writeAndFlush(message);
                 heartBeat(ctx);
@@ -35,7 +34,6 @@ public class HeartBeatHandler extends ChannelInboundHandlerAdapter {
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
         ImMessage.Message message = (ImMessage.Message) msg;
         if (message.getMessageType().equals(ImMessage.MessageType.HEART_BEAT)) {
-            log.info("收到服务端心跳回写");
             return;
         }
 

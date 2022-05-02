@@ -1,8 +1,6 @@
-package com.sixsixsix516.im.server.node;
+package com.sixsixsix516.im.common.node;
 
 import lombok.Data;
-import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.stereotype.Component;
 
 /**
  * 代表集群中的一个节点
@@ -11,8 +9,6 @@ import org.springframework.stereotype.Component;
  * @date 2022/5/1
  */
 @Data
-@Component
-@ConfigurationProperties(prefix = "im")
 public class ImNode {
 
     /**

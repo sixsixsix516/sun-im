@@ -8,3 +8,10 @@ server:
 im:
   host: 127.0.0.1
   port: 9966
+
+
+spring:
+  redis:
+    host: 127.0.0.1
+    port: 6379
+    database: 0

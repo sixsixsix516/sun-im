@@ -1,8 +1,10 @@
 package com.sixsixsix516.im.client;
 
 import com.sixsixsix516.im.client.handler.LoginHandler;
+import com.sixsixsix516.im.client.utils.HttpUtil;
 import com.sixsixsix516.im.common.codec.ProtobufDecoder;
 import com.sixsixsix516.im.common.codec.ProtobufEncoder;
+import com.sixsixsix516.im.common.node.ImNode;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.buffer.PooledByteBufAllocator;
 import io.netty.channel.Channel;
@@ -22,6 +24,11 @@ import lombok.extern.slf4j.Slf4j;
 public class ClientServer {
 
     public static Channel start() throws InterruptedException {
+        ImNode imNode = HttpUtil.get("http://127.0.0.1:9955/getNode", ImNode.class);
+        String host = imNode.getHost();
+        Integer port = imNode.getPort();
+
+
         Bootstrap bootstrap = new Bootstrap();
 
         ChannelFuture connectFuture = bootstrap.group(new NioEventLoopGroup())
@@ -38,7 +45,7 @@ public class ClientServer {
                                 .addLast(new ProtobufEncoder());
                     }
                 })
-                .connect("127.0.0.1", 9521).sync();
+                .connect(host, port).sync();
 
         return connectFuture.channel();
     }

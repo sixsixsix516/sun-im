@@ -2,8 +2,7 @@ package com.sixsixsix516.im.server.zookeeper;
 
 import com.google.gson.Gson;
 import com.sixsixsix516.im.server.node.ClusterNodeWorker;
-import com.sixsixsix516.im.server.node.ImNode;
-import com.sixsixsix516.im.server.node.NodeConstant;
+import com.sixsixsix516.im.common.node.ImNode;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.curator.framework.CuratorFramework;

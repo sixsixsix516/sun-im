@@ -1,6 +1,5 @@
 package com.sixsixsix516.im.server.zookeeper;
 
-import com.sixsixsix516.im.server.node.NodeConstant;
 import lombok.RequiredArgsConstructor;
 import org.apache.curator.framework.CuratorFramework;
 import org.apache.zookeeper.CreateMode;

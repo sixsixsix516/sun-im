@@ -1,6 +1,8 @@
 package com.sixsixsix516.im.server.node;
 
 import com.google.gson.Gson;
+import com.sixsixsix516.im.common.node.ImNode;
+import com.sixsixsix516.im.server.zookeeper.NodeConstant;
 import com.sixsixsix516.im.server.zookeeper.NodeIdGenerator;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;

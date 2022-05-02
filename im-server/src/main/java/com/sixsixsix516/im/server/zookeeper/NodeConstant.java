@@ -1,4 +1,4 @@
-package com.sixsixsix516.im.server.node;
+package com.sixsixsix516.im.server.zookeeper;
 
 /**
  * @author SUN

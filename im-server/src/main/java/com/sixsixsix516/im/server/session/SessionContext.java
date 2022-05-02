@@ -1,9 +1,6 @@
 package com.sixsixsix516.im.server.session;
 
-import io.netty.channel.Channel;
-
-import java.util.HashMap;
-import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * @author SUN
@@ -11,14 +8,22 @@ import java.util.Map;
  */
 public class SessionContext {
 
-    private static final Map<String, Channel> ONLINE_SESSION = new HashMap<>();
+    /**
+     * 当前在线会话
+     */
+    private static final ConcurrentHashMap<String, ImSession> ONLINE_SESSION = new ConcurrentHashMap<>();
 
-
-    public static void add(String username, Channel channel) {
-        ONLINE_SESSION.put(username, channel);
+    public static void add(String username, ImSession session) {
+        ONLINE_SESSION.put(username, session);
     }
 
-    public static Channel get(String username) {
+    public static void remove(String username) {
+        ImSession imSession = get(username);
+        imSession.getChannel().close();
+        ONLINE_SESSION.remove(username);
+    }
+
+    public static ImSession get(String username) {
         return ONLINE_SESSION.get(username);
     }
 }

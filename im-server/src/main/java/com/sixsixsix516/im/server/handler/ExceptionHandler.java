@@ -1,6 +1,6 @@
 package com.sixsixsix516.im.server.handler;
 
-import io.netty.channel.Channel;
+import com.sixsixsix516.im.server.session.SessionManager;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 
@@ -10,15 +10,10 @@ import io.netty.channel.ChannelInboundHandlerAdapter;
  */
 public class ExceptionHandler extends ChannelInboundHandlerAdapter {
 
-
     @Override
-    public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
+    public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
         cause.printStackTrace();
 
-        ctx.close();
-        Channel channel = ctx.channel();
-        channel.close();
-        // TODO 移除掉本地存储的channel
-//        channel.attr()
+        SessionManager.close(ctx);
     }
 }

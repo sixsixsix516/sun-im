@@ -5,7 +5,7 @@ import com.sixsixsix516.im.common.codec.ProtobufEncoder;
 import com.sixsixsix516.im.server.handler.ExceptionHandler;
 import com.sixsixsix516.im.server.handler.LoginHandler;
 import com.sixsixsix516.im.server.node.ClusterNodeWorker;
-import com.sixsixsix516.im.server.node.ImNode;
+import com.sixsixsix516.im.common.node.ImNode;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.buffer.PooledByteBufAllocator;
 import io.netty.channel.ChannelFuture;
@@ -55,8 +55,9 @@ public class ImServer {
 
         bindFuture.addListener(future -> {
             if (future.isSuccess()) {
-                // 启动成功，将当前节点注册到zookeeper中
+                // 启动成功
                 log.info("ImServer start successful!");
+                // 将当前节点注册到zookeeper中
                 nodeId = clusterNodeWorker.createLocalNode();
             } else {
                 // 失败

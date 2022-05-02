@@ -1,7 +1,12 @@
 package com.sixsixsix516.im.server.handler;
 
 import com.sixsixsix516.im.common.model.ImMessage;
+import com.sixsixsix516.im.server.cache.UserCacheService;
+import com.sixsixsix516.im.server.session.ChannelAttribute;
+import com.sixsixsix516.im.server.session.ImSession;
 import com.sixsixsix516.im.server.session.SessionContext;
+import com.sixsixsix516.im.server.utils.SpringApplicationContextUtil;
+import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 import io.netty.channel.ChannelPipeline;
@@ -24,13 +29,19 @@ public class LoginHandler extends ChannelInboundHandlerAdapter {
 
         boolean login = login(username);
         if (login) {
-            SessionContext.add(username, ctx.channel());
+            Channel channel = ctx.channel();
+            channel.attr(ChannelAttribute.USERNAME).set(username);
+
+            SessionContext.add(username, new ImSession(username, channel));
 
             // 登录成功，移除登录，添加聊天
             ChannelPipeline pipeline = ctx.pipeline();
             pipeline.remove(this).addLast(new HeartBeatHandler(), new ChatHandler());
 
             log.info("用户" + username + " 登入系统");
+
+            // 登录成功，将当前信息存储在redis
+            SpringApplicationContextUtil.getBean(UserCacheService.class).addCurrentLoginUser(username);
         }
 
         // 响应登录结果
